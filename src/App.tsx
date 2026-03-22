@@ -34,7 +34,7 @@ const projects = [
     title: "DEAL Thailand",
     subtitle: "Agricultural Marketplace App",
     badge: "Production App",
-    image: "/deal-logo.png",
+    image: import.meta.env.BASE_URL + "deal-logo.png",
     desc: "แอป Android สำหรับตลาดยางพาราและสินค้าเกษตรไทย พร้อมระบบประมูล Real-time, ร้านค้าออนไลน์ และชำระเงินผ่าน Google Play",
     role: "Android Developer (Freelance)",
     features: [
@@ -51,7 +51,7 @@ const projects = [
     title: "DonateDev",
     subtitle: "Donation Platform",
     badge: "Research Project",
-    image: "/donatedev-logo.png",
+    image: import.meta.env.BASE_URL + "donatedev-logo.png",
     desc: "เว็บแอประบบบริจาครองรับ 2 โหมด: บริจาคตามโปรเจกต์ และบริจาคให้สตรีมเมอร์ พร้อมแจ้งเตือนแบบ Real-time",
     role: "Full-Stack Developer (งานวิจัย)",
     features: [

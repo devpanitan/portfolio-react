@@ -11,7 +11,7 @@ interface ProfileCardProps {
 export default function ProfileCard({
   name = "Patipan Rueangyong",
   title = "Mobile & Full-Stack Developer",
-  image = "/profile.jfif",
+  image = import.meta.env.BASE_URL + "profile.jfif",
   github = "https://github.com/devpanitan",
   email = "mailto:panitan05499@srru.ac.th",
 }: ProfileCardProps) {
