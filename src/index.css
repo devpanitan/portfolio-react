@@ -1,0 +1,4 @@
+@import "tailwindcss";
+
+html { scroll-behavior: smooth; color-scheme: light; }
+body { font-family: 'Noto Sans Thai', 'Inter', sans-serif; margin: 0; }
