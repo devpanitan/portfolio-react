@@ -88,6 +88,7 @@ const skills = [
 
 const timeline = [
   { year: "2026", title: "Android Developer (Freelance)", company: "DEAL Thailand App", items: ["แก้ไขระบบ Google Play Billing ให้ชำระเงินและปลดล็อกฟีเจอร์ได้", "ทดสอบ Backend API ทั้งระบบ บน Render", "Deploy แอปบน Google Play Store"] },
+  { year: "มี.ค. 2026", title: "Teaching Assistant (TA)", company: "IT รักษ์ป่า — THNIC Academy", items: ["ช่วยสอน IoT และเขียนโปรแกรมให้นักเรียน ม.4-5 จ.ตาก", "สอน Coding ประยุกต์กับการอนุรักษ์ป่า 5 วัน"], images: ["itforest-5.jpg", "itforest-2.jpg", "itforest-4.jpg"] },
   { year: "2025 - 2026", title: "Full-Stack Developer (Research)", company: "DonateDev — งานวิจัย", items: ["พัฒนาระบบบริจาค Full-Stack ด้วย Next.js + MongoDB", "ระบบ Payment Gateway (Omise) + Real-time alerts"] },
   { year: "2023 - ปัจจุบัน", title: "Computer Science Student", company: "มหาวิทยาลัยราชภัฏสุรินทร์ (SRRU)", items: ["สาขาวิทยาการคอมพิวเตอร์", "โปรเจกต์ Smart Farm IoT"] },
 ];
@@ -164,10 +165,22 @@ function Navbar() {
   );
 }
 
+function Lightbox({ src, alt, onClose }: { src: string; alt: string; onClose: () => void }) {
+  return (
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/80 backdrop-blur-md cursor-zoom-out" onClick={onClose}>
+      <img src={src} alt={alt} className="max-w-[90vw] max-h-[90vh] object-contain rounded-2xl shadow-2xl ring-1 ring-white/10 animate-[fadeScale_0.3s_ease-out]" onClick={e => e.stopPropagation()} />
+      <button onClick={onClose} className="absolute top-6 right-6 w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 text-white text-xl flex items-center justify-center backdrop-blur transition-colors">&times;</button>
+      <style>{`@keyframes fadeScale { from { opacity:0; transform:scale(0.9) } to { opacity:1; transform:scale(1) } }`}</style>
+    </div>
+  );
+}
+
 export default function App() {
+  const [lightbox, setLightbox] = useState<{ src: string; alt: string } | null>(null);
   return (
     <div className="text-gray-900 bg-white">
       <CustomCursor />
+      {lightbox && <Lightbox src={lightbox.src} alt={lightbox.alt} onClose={() => setLightbox(null)} />}
       <Navbar />
 
       {/* Hero */}
@@ -328,23 +341,41 @@ export default function App() {
       </section>
 
       {/* Experience */}
-      <section id="experience" className="py-20 px-6 bg-gray-50">
-        <div className="max-w-[700px] mx-auto">
+      <section id="experience" className="py-20 px-6 bg-gradient-to-b from-gray-50 to-white">
+        <div className="max-w-[800px] mx-auto">
           <SectionTitle text="ประสบการณ์" />
-          {timeline.map((t, i) => (
-            <FadeIn key={i} delay={i * 0.15} direction="left">
-              <div className={`grid grid-cols-[120px_1fr] md:grid-cols-[140px_1fr] gap-6 pb-8 mb-8 ${i < timeline.length - 1 ? "border-b border-gray-200" : ""}`}>
-                <GradientText className="text-sm font-bold pt-1" colors={['#6366f1', '#a855f7', '#6366f1']} speed={3}>{t.year}</GradientText>
-                <div>
-                  <h3 className="text-lg font-bold">{t.title}</h3>
-                  <p className="text-sm text-gray-500 mb-2">{t.company}</p>
-                  <ul className="list-disc pl-5 text-sm text-gray-500 space-y-1">
-                    {t.items.map((item, j) => <li key={j}>{item}</li>)}
-                  </ul>
+          <div className="relative">
+            {/* Timeline line */}
+            <div className="absolute left-[69px] md:left-[79px] top-0 bottom-0 w-[2px] bg-gradient-to-b from-indigo-400 via-purple-400 to-indigo-200 hidden sm:block" />
+            {timeline.map((t, i) => (
+              <FadeIn key={i} delay={i * 0.15} direction="left">
+                <div className="grid grid-cols-[120px_1fr] md:grid-cols-[140px_1fr] gap-6 pb-10 mb-2 relative">
+                  {/* Timeline dot */}
+                  <div className="absolute left-[63px] md:left-[73px] top-1 w-[14px] h-[14px] rounded-full bg-white border-[3px] border-indigo-500 shadow-[0_0_10px_rgba(99,102,241,0.5)] z-10 hidden sm:block" />
+                  <GradientText className="text-sm font-bold pt-1 text-right pr-4" colors={['#6366f1', '#a855f7', '#6366f1']} speed={3}>{t.year}</GradientText>
+                  <div className="bg-white rounded-2xl p-5 shadow-[0_4px_24px_rgba(0,0,0,0.06)] border border-gray-100 hover:shadow-[0_8px_40px_rgba(99,102,241,0.12)] hover:border-indigo-200 transition-all duration-300">
+                    <h3 className="text-lg font-bold text-gray-800">{t.title}</h3>
+                    <p className="text-sm text-indigo-500 font-medium mb-3">{t.company}</p>
+                    <ul className="space-y-2 text-sm text-gray-500">
+                      {t.items.map((item, j) => <li key={j} className="flex items-start gap-2"><span className="text-indigo-400 mt-0.5">▸</span>{item}</li>)}
+                    </ul>
+                    {(t as any).images && (
+                      <div className="flex gap-3 mt-5 overflow-x-auto pb-1">
+                        {((t as any).images as string[]).map((img, j) => (
+                          <div key={j} className="relative group flex-shrink-0 cursor-pointer" onClick={() => setLightbox({ src: import.meta.env.BASE_URL + img, alt: `${t.company} ${j + 1}` })}>
+                            <img src={import.meta.env.BASE_URL + img} alt={`${t.company} ${j + 1}`} className="w-44 h-32 object-cover rounded-xl border-2 border-gray-100 shadow-md group-hover:scale-[1.03] group-hover:shadow-xl group-hover:border-indigo-300 transition-all duration-300" />
+                            <div className="absolute inset-0 rounded-xl bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-center pb-3">
+                              <span className="text-white text-xs font-medium bg-black/40 px-3 py-1 rounded-full backdrop-blur-sm">🔍 ดูรูปเต็ม</span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                 </div>
-              </div>
-            </FadeIn>
-          ))}
+              </FadeIn>
+            ))}
+          </div>
         </div>
       </section>
 
